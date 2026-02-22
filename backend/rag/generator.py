@@ -29,16 +29,12 @@ If answer not found → say “Information not available in provided documents.�
 import os
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-from retriever import retrieve_context
 
 load_dotenv()
 
-# -------- CONFIG --------
-CHAT_DEPLOYMENT_NAME = "gpt-4o-mini"  # Azure deployment name
+CHAT_DEPLOYMENT_NAME = "gpt-4o-mini"
 API_VERSION = "2025-01-01-preview"
-# ------------------------
 
-# Azure client
 azure_client = AzureOpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     api_version=API_VERSION,
@@ -46,12 +42,8 @@ azure_client = AzureOpenAI(
 )
 
 
-def generate_answer(question: str):
-    # Step 1: Retrieve context
-    documents = retrieve_context(question)
-    context = "\n\n".join(documents)
+def generate_answer(question: str, context: str):
 
-    # Step 2: Build strict prompt
     system_prompt = """
 You are a UK Global Talent Visa assistant.
 
@@ -73,22 +65,13 @@ Question:
 Answer:
 """
 
-    # Step 3: Call Azure GPT
     response = azure_client.chat.completions.create(
         model=CHAT_DEPLOYMENT_NAME,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.0  # very important for strict factual answers
+        temperature=0.0
     )
 
     return response.choices[0].message.content
-
-
-if __name__ == "__main__":
-    test_question = "Can students apply for UK Talent Visa?"
-    answer = generate_answer(test_question)
-
-    print("\n🤖 Final Answer:\n")
-    print(answer)
