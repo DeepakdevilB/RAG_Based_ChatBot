@@ -6,7 +6,7 @@ Before chatbot can answer anything, it needs data inside ChromaDB.
 
 So ingest.py does:  
 
-                        Raw Website Text
+                        Raw Website Text(we have provided a PDF for simplicity)
                             ↓
                         Split into chunks
                             ↓
@@ -22,37 +22,40 @@ After that, your chatbot just retrieves.
 import os
 from dotenv import load_dotenv
 import chromadb
-from chromadb.utils import embedding_functions
 from pypdf import PdfReader
+from openai import AzureOpenAI
 
-# Load API key
 load_dotenv()
 
-# ---------- CONFIG ----------
 PDF_PATH = "data/website_Data_questions.pdf"
 CHROMA_PATH = "backend/db/chroma_db"
-COLLECTION_NAME = "uk_talent_visa"
+COLLECTION_NAME = "uk_talent_visa_v2"
 CHUNK_SIZE = 800
-# ----------------------------
+
+azure_client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    api_version="2023-05-15",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
 
 def load_pdf_text(pdf_path):
     reader = PdfReader(pdf_path)
     text = ""
-    
     for page in reader.pages:
         page_text = page.extract_text()
         if page_text:
             text += page_text + "\n"
-    
     return text
 
-
 def chunk_text(text, chunk_size=CHUNK_SIZE):
-    chunks = []
-    for i in range(0, len(text), chunk_size):
-        chunks.append(text[i:i+chunk_size])
-    return chunks
+    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
 
+def get_embeddings(text_chunks):
+    response = azure_client.embeddings.create(
+        model="text-embedding-3-small",  # Azure deployment name
+        input=text_chunks
+    )
+    return [item.embedding for item in response.data]
 
 def main():
     print("📄 Loading PDF...")
@@ -61,27 +64,24 @@ def main():
     print("✂️ Chunking text...")
     chunks = chunk_text(text)
 
-    print("🧠 Setting up Chroma client...")
+    print("🧠 Generating embeddings using Azure...")
+    embeddings = get_embeddings(chunks)
+
+    print("🗄️ Setting up ChromaDB...")
     chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        model_name="text-embedding-3-small"
-    )
-
     collection = chroma_client.get_or_create_collection(
-        name=COLLECTION_NAME,
-        embedding_function=openai_ef
+        name=COLLECTION_NAME
     )
 
     print("💾 Storing embeddings in Chroma...")
     collection.add(
         documents=chunks,
+        embeddings=embeddings,
         ids=[f"doc_{i}" for i in range(len(chunks))]
     )
 
-    print("✅ Ingestion complete! Vector DB ready.")
-
+    print("✅ Ingestion complete!")
 
 if __name__ == "__main__":
     main()
