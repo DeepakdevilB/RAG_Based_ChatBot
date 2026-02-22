@@ -6,7 +6,7 @@ Before chatbot can answer anything, it needs data inside ChromaDB.
 
 So ingest.py does:  
 
-                        Raw Website Text
+                        Raw Website Text(we have provided a PDF for simplicity)
                             ↓
                         Split into chunks
                             ↓
@@ -25,15 +25,15 @@ import chromadb
 from chromadb.utils import embedding_functions
 from pypdf import PdfReader
 
-# Load API key
+# Load environment variables
 load_dotenv()
 
-# ---------- CONFIG ----------
+# -------- CONFIG --------
 PDF_PATH = "data/website_Data_questions.pdf"
 CHROMA_PATH = "backend/db/chroma_db"
 COLLECTION_NAME = "uk_talent_visa"
-CHUNK_SIZE = 800
-# ----------------------------
+CHUNK_SIZE = 800   # Slightly bigger chunks for PDF
+# ------------------------
 
 def load_pdf_text(pdf_path):
     reader = PdfReader(pdf_path)
@@ -61,7 +61,7 @@ def main():
     print("✂️ Chunking text...")
     chunks = chunk_text(text)
 
-    print("🧠 Setting up Chroma client...")
+    print("🧠 Setting up ChromaDB...")
     chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
