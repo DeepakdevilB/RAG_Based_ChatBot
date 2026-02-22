@@ -40,8 +40,8 @@ def chat(request):
 That’s clean separation of concerns.
 """
 
-from retriever import retrieve_context
-from generator import generate_answer
+from .retriever import retrieve_context
+from .generator import generate_answer
 
 
 def rag_pipeline(question: str, top_k: int = 3):
