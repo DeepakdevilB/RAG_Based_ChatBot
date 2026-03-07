@@ -36,9 +36,10 @@ def health_check():
 # -------- Chat Endpoint --------
 @app.post("/chat")
 def chat(request: ChatRequest):
-    response = rag_pipeline(request.message)
+    result = rag_pipeline(request.message)
 
     return {
         "question": request.message,
-        "answer": response
+        "answer": result["answer"],
+        "latency": result["latency"]
     }

@@ -23,7 +23,17 @@ async function sendMessage() {
 
         const data = await response.json();
 
-        chatBox.innerHTML += `<div class="bot-message">${data.answer}</div>`;
+        chatBox.innerHTML += `
+        <div class="bot-message">
+            ${data.answer}
+            <div class="latency">
+                🧠 Embedding: ${data.latency.embedding}s <br>
+                🔎 Retrieval: ${data.latency.retrieval}s <br>
+                🤖 LLM: ${data.latency.llm}s <br>
+                ⏱ Total: ${data.latency.total}s
+            </div>
+        </div>
+        `;
         chatBox.scrollTop = chatBox.scrollHeight;
 
     } catch (error) {

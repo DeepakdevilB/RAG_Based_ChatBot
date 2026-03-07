@@ -53,19 +53,26 @@ def get_query_embedding(query: str):
     
     print(f"Embedding Generation Time: {end - start:.3f} seconds")
     
-    return response.data[0].embedding
+    return response.data[0].embedding,end - start  # return embedding and latency
 
 
 def retrieve_context(query: str, top_k: int = TOP_K):
-    query_embedding = get_query_embedding(query)
+
+    # Embedding time
+    query_embedding, embedding_time = get_query_embedding(query)
+
+    # Retrieval time
+    retrieval_start = time.time()
 
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=top_k
     )
 
-    return results["documents"][0]  # return top-k chunks
-
+    retrieval_end = time.time()
+    retrieval_time = retrieval_end - retrieval_start
+    documents = results["documents"][0]
+    return documents, embedding_time, retrieval_time
 
 if __name__ == "__main__":
     # Quick test

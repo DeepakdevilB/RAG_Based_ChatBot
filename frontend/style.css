@@ -50,3 +50,10 @@ button {
     border: none;
     cursor: pointer;
 }
+
+.latency {
+    font-size: 12px;
+    color: gray;
+    margin-top: 6px;
+    line-height: 1.4;
+}

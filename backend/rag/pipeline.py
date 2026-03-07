@@ -52,7 +52,7 @@ def rag_pipeline(question: str, top_k: int = 5):
 
     # Step 1: Retrieve relevant chunks
     retrieval_start = time.time()   # Start timer for retrieval
-    documents = retrieve_context(question, top_k=top_k)
+    documents, embedding_time, retrieval_time = retrieve_context(question, top_k=top_k)
     retrieval_end = time.time()     # End timer for retrieval
     
     """Debugging code (to check retrieved chunks from ChromaDB)- for production comment this out"""
@@ -80,7 +80,15 @@ def rag_pipeline(question: str, top_k: int = 5):
 
     print("======================================\n")
     
-    return answer
+    return {
+        "answer": answer,
+        "latency": {
+            "embedding": round(embedding_time, 3),
+            "retrieval": round(retrieval_time, 3),
+            "llm": round(llm_end - llm_start, 3),
+            "total": round(total_end - total_start, 3)
+        }
+    }
 
 
 if __name__ == "__main__":
