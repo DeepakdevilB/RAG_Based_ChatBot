@@ -130,3 +130,79 @@ button:hover{
     66%{content:"..";}
     100%{content:"...";}
 }
+
+.mic-btn{
+    background:#2ecc71;
+    color:white;
+    border:none;
+    padding:0 16px;
+    cursor:pointer;
+}
+
+.mic-btn:hover{
+    background:#27ae60;
+}
+
+.mic-btn{
+    background:#2ecc71;
+    color:white;
+    border:none;
+    padding:0 16px;
+    cursor:pointer;
+    font-size:18px;
+    transition:all 0.2s ease;
+}
+
+/* Listening state */
+
+.mic-btn.listening{
+    background:#e74c3c;
+    animation: pulse 1.2s infinite;
+}
+
+/* Pulse animation */
+
+@keyframes pulse{
+    0%{
+        box-shadow:0 0 0 0 rgba(231,76,60,0.7);
+    }
+
+    70%{
+        box-shadow:0 0 0 12px rgba(231,76,60,0);
+    }
+
+    100%{
+        box-shadow:0 0 0 0 rgba(231,76,60,0);
+    }
+}
+
+.tts-btn{
+    background:#6c757d;
+    color:white;
+    border:none;
+    padding:0 14px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* Active TTS */
+
+.tts-active{
+    background:#ff9800;
+}
+
+#status-indicator{
+    height:20px;
+    font-size:13px;
+    color:#555;
+    padding-left:10px;
+    margin-bottom:6px;
+}
+
+.status-speaking{
+    color:#ff9800;
+}
+
+.status-listening{
+    color:#e74c3c;
+}
