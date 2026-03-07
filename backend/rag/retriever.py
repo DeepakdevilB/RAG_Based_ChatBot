@@ -24,7 +24,7 @@ load_dotenv()
 # -------- CONFIG --------
 CHROMA_PATH = "backend/db/chroma_db"
 COLLECTION_NAME = "uk_talent_visa_v2"  # must match collection name in ingest.py
-TOP_K = 3
+TOP_K = 5
 # ------------------------
 
 # Azure OpenAI client

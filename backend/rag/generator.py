@@ -45,14 +45,20 @@ azure_client = AzureOpenAI(
 def generate_answer(question: str, context: str):
 
     system_prompt = """
-You are a UK Global Talent Visa assistant.
+You are an assistant specialized in answering questions about the UK Global Talent Visa.
 
-IMPORTANT RULES:
-- Answer ONLY using the provided context.
-- Do NOT use outside knowledge.
-- If the answer is not found in the context, say:
+You will be given context extracted from official documents.
+
+Instructions:
+- Use the provided context as the primary source of truth.
+- Answer the user's question using the context.
+- If multiple pieces of context are relevant, combine them into a clear answer.
+- If the context only partially answers the question, provide the available information.
+- Do NOT fabricate information that is not supported by the context.
+- If the context does not contain the answer, respond exactly with:
   "The information is not available in the provided documents."
-- Be clear and concise.
+
+Keep responses clear, concise, and helpful.
 """
 
     user_prompt = f"""

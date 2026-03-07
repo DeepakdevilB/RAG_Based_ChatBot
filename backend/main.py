@@ -28,7 +28,7 @@ class ChatRequest(BaseModel):
 @app.get("/")
 def health_check():
     return {
-        "status": "healthy",
+        "status": "healthy (^_^)",
         "service": "UK Global Talent Visa RAG API"
     }
 

@@ -44,10 +44,18 @@ from .retriever import retrieve_context
 from .generator import generate_answer
 
 
-def rag_pipeline(question: str, top_k: int = 3):
+def rag_pipeline(question: str, top_k: int = 5):
 
     # Step 1: Retrieve relevant chunks
     documents = retrieve_context(question, top_k=top_k)
+    
+    """Debugging code (to check retrieved chunks from ChromaDB)- for production comment this out"""
+    for i, doc in enumerate(documents):
+        print(f"\n--- Chunk {i+1} ---\n")
+        print(doc)
+        print("\n------------------------------------\n")
+    
+    
     context = "\n\n".join(documents)
 
     # Step 2: Generate final answer
