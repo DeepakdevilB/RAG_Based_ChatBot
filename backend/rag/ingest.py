@@ -25,6 +25,9 @@ import chromadb
 from pypdf import PdfReader
 from openai import AzureOpenAI
 
+
+import re   # for chunking based on regex pattern - a number followed by a dot
+
 load_dotenv()
 
 PDF_PATH = "data/website_Data_questions.pdf"
@@ -47,8 +50,36 @@ def load_pdf_text(pdf_path):
             text += page_text + "\n"
     return text
 
-def chunk_text(text, chunk_size=CHUNK_SIZE):
-    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+
+def chunk_text(text):
+
+    lines = text.split("\n")
+    chunks = []
+
+    current_chunk = ""
+
+    for line in lines:
+
+        line = line.strip()
+
+        if not line:
+            continue
+
+        # If line ends with "?" start a new chunk
+        if line.endswith("?"):
+
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+
+            current_chunk = line
+
+        else:
+            current_chunk += " " + line
+
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+
+    return chunks
 
 def get_embeddings(text_chunks):
     response = azure_client.embeddings.create(

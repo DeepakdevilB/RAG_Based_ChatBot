@@ -19,6 +19,8 @@ from dotenv import load_dotenv
 import chromadb
 from openai import AzureOpenAI
 
+import time         # for measuring latency of retrieval step
+
 load_dotenv()
 
 # -------- CONFIG --------
@@ -40,10 +42,17 @@ collection = chroma_client.get_collection(name=COLLECTION_NAME)
 
 
 def get_query_embedding(query: str):
+    
+    start = time.time()   # Start timer for embedding generation
+    
     response = azure_client.embeddings.create(
         model="text-embedding-3-small",  # Azure deployment name
         input=query
     )
+    end = time.time()     # End timer for embedding generation
+    
+    print(f"Embedding Generation Time: {end - start:.3f} seconds")
+    
     return response.data[0].embedding
 
 

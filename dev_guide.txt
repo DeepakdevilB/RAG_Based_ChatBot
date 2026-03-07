@@ -1,0 +1,51 @@
+1.  To improve latency - Local Embeddings (Fastest)
+
+        Instead of Azure embeddings:
+        text-embedding-3-small
+
+        use a local model like:
+        BAAI/bge-small-en
+        sentence-transformers/all-MiniLM-L6-v2
+
+        Then embedding time becomes:
+        ~5 ms
+        instead of 1.8 seconds.
+
+        But requires installing local models 
+
+
+Current Architecture
+
+Right now the system works like this:
+
+        User (browser)
+            ↓
+        Frontend (HTML/JS)
+            ↓
+        FastAPI server
+            ↓
+        Azure Embedding API
+            ↓
+        ChromaDB
+            ↓
+        Azure GPT
+            ↓
+        Response
+
+
+If We Switch to Local Embeddings
+The architecture becomes:
+
+        User (browser)
+            ↓
+        Frontend
+            ↓
+        FastAPI server
+            ↓
+        Local embedding model
+            ↓
+        ChromaDB
+            ↓
+        LLM
+
+
