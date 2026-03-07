@@ -6,17 +6,27 @@
 </head>
 <body>
 
-    <div class="chat-container">
-        <h2>UK Global Talent Visa Assistant</h2>
+<div class="app-container">
 
-        <div id="chat-box"></div>
-
-        <div class="input-container">
-            <input type="text" id="message-input" placeholder="Ask your question..." />
-            <button onclick="sendMessage()">Send</button>
-        </div>
+    <div class="header">
+        🇬🇧 UK Global Talent Visa Assistant
     </div>
 
-    <script src="script.js"></script>
+    <div id="chat-box"></div>
+
+    <div class="input-container">
+        <input 
+            type="text" 
+            id="message-input" 
+            placeholder="Ask your question..." 
+            onkeypress="handleKeyPress(event)"
+        />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>

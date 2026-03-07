@@ -1,59 +1,132 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg,#eef2f7,#dfe7f3);
+    height: 100vh;
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    align-items: center;
 }
 
-.chat-container {
-    width: 600px;
+/* App container */
+
+.app-container{
+    width: 650px;
+    height: 720px;
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-#chat-box {
-    height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.user-message {
-    text-align: right;
-    margin: 10px 0;
-    color: blue;
-}
-
-.bot-message {
-    text-align: left;
-    margin: 10px 0;
-    color: green;
-}
-
-.input-container {
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-input {
-    flex: 1;
-    padding: 10px;
+/* Header */
+
+.header{
+    padding:16px;
+    font-weight:600;
+    background:#2c3e50;
+    color:white;
+    text-align:center;
 }
 
-button {
-    padding: 10px 15px;
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+/* Chat area */
+
+#chat-box{
+    flex:1;
+    padding:18px;
+    overflow-y:auto;
+    background:#f7f9fc;
 }
 
-.latency {
-    font-size: 12px;
-    color: gray;
-    margin-top: 6px;
-    line-height: 1.4;
+/* Message container */
+
+.message{
+    display:flex;
+    margin:10px 0;
+}
+
+.message.user{
+    justify-content:flex-end;
+}
+
+.message.bot{
+    justify-content:flex-start;
+}
+
+/* Bubbles */
+
+.bubble{
+    max-width:75%;
+    padding:12px 16px;
+    border-radius:16px;
+    line-height:1.5;
+    font-size:14px;
+}
+
+.user-bubble{
+    background:#4c8bf5;
+    color:white;
+}
+
+.bot-bubble{
+    background:white;
+    border:1px solid #e0e4ea;
+}
+
+/* Input */
+
+.input-container{
+    display:flex;
+    border-top:1px solid #e5e5e5;
+}
+
+input{
+    flex:1;
+    border:none;
+    padding:14px;
+    font-size:14px;
+}
+
+input:focus{
+    outline:none;
+}
+
+button{
+    background:#4c8bf5;
+    color:white;
+    border:none;
+    padding:0 20px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#3a75d6;
+}
+
+/* Latency */
+
+.latency{
+    font-size:11px;
+    margin-top:8px;
+    color:#7a7a7a;
+}
+
+/* Typing animation */
+
+.typing{
+    font-style:italic;
+}
+
+.dots::after{
+    content:"";
+    animation:dots 1.5s infinite;
+}
+
+@keyframes dots{
+    0%{content:"";}
+    33%{content:".";}
+    66%{content:"..";}
+    100%{content:"...";}
 }
