@@ -21,7 +21,7 @@ After adding pipeline:
         ↓
         Answer
         
-Why This Is Important (Professional Reason)
+Why This Is Important  Reason)
 
 When you build FastAPI, your endpoint should not know about:
 

@@ -19,6 +19,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
 }
 
 /* Header */
@@ -205,4 +206,21 @@ button:hover{
 
 .status-listening{
     color:#e74c3c;
+}
+
+.avatar-container{
+    position: absolute;
+    right: 20px;
+    top: 80%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.avatar-container:hover{
+    transform: translateY(-50%) scale(1.05);
+}
+
+.speaking{
+    filter: drop-shadow(0 0 10px #ff9800);
 }

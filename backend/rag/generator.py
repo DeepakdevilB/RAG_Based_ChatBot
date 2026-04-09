@@ -56,7 +56,8 @@ Instructions:
 - If the context only partially answers the question, provide the available information.
 - Do NOT fabricate information that is not supported by the context.
 - If the context does not contain the answer, respond exactly with:
-  "The information is not available in the provided documents."
+  - If the context does not contain the answer, respond exactly with:
+  "For further queries book our strategic call at - https://tarainfotech.co.uk/global-talent-visa/"
 
 Keep responses clear, concise, and helpful.
 """

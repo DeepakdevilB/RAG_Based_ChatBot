@@ -1,17 +1,25 @@
 let ttsEnabled = false;
+const avatar = document.getElementById("avatar");
+
+function formatLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+        return `<a href="${url}" target="_blank">${url}</a>`;
+    });
+}
 
 /* ------------------------------
    SEND MESSAGE
 --------------------------------*/
 
-async function sendMessage(){
+async function sendMessage() {
     // Stop any ongoing speech
     window.speechSynthesis.cancel();
 
     const inputField = document.getElementById("message-input");
     const message = inputField.value.trim();
 
-    if(!message) return;
+    if (!message) return;
 
     const chatBox = document.getElementById("chat-box");
 
@@ -42,14 +50,14 @@ async function sendMessage(){
 
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    try{
+    try {
 
-        const response = await fetch("http://127.0.0.1:8000/chat",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+        const response = await fetch("http://127.0.0.1:8000/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({message:message})
+            body: JSON.stringify({ message: message })
         });
 
         const data = await response.json();
@@ -62,7 +70,7 @@ async function sendMessage(){
         <div class="message bot">
             <div class="bubble bot-bubble">
 
-                ${botAnswer}
+                ${formatLinks(botAnswer)}
 
                 <div class="latency">
                     🧠 Embedding: ${data.latency.embedding}s <br>
@@ -82,7 +90,7 @@ async function sendMessage(){
         speakText(botAnswer);
 
     }
-    catch(error){
+    catch (error) {
 
         document.getElementById(typingId).remove();
 
@@ -101,8 +109,8 @@ async function sendMessage(){
    ENTER KEY SUPPORT
 --------------------------------*/
 
-function handleKeyPress(event){
-    if(event.key === "Enter"){
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
         sendMessage();
     }
 }
@@ -112,25 +120,25 @@ function handleKeyPress(event){
    TEXT TO SPEECH
 --------------------------------*/
 
-function toggleTTS(){
+function toggleTTS() {
 
     const btn = document.getElementById("tts-btn");
 
     ttsEnabled = !ttsEnabled;
 
-    if(ttsEnabled){
+    if (ttsEnabled) {
         btn.classList.add("tts-active");
         btn.innerText = "🔊";
     }
-    else{
+    else {
         btn.classList.remove("tts-active");
         btn.innerText = "🔇";
     }
 }
 
-function speakText(text){
+function speakText(text) {
 
-    if(!ttsEnabled) return;
+    if (!ttsEnabled) return;
 
     // Stop any previous speech
     window.speechSynthesis.cancel();
@@ -143,10 +151,16 @@ function speakText(text){
 
     speech.onstart = () => {
         showStatus("🔊 Speaking...", "status-speaking");
+
+        avatar.load("talking.json");
+        avatar.classList.add("speaking");
     };
 
     speech.onend = () => {
         clearStatus();
+
+        avatar.load("idle.json");
+        avatar.classList.remove("speaking");
     };
 
     // Small delay fixes clipped first words
@@ -160,7 +174,7 @@ function speakText(text){
    VOICE INPUT
 --------------------------------*/
 
-function startVoiceInput(){
+function startVoiceInput() {
 
     window.speechSynthesis.cancel();
 
@@ -179,7 +193,7 @@ function startVoiceInput(){
 
     showStatus("🎤 Listening...", "status-listening");
 
-    recognition.onresult = (event)=>{
+    recognition.onresult = (event) => {
 
         const transcript = event.results[0][0].transcript;
 
@@ -192,14 +206,14 @@ function startVoiceInput(){
         sendMessage();
     };
 
-    recognition.onerror = ()=>{
+    recognition.onerror = () => {
 
         micButton.classList.remove("listening");
 
         clearStatus();
     };
 
-    recognition.onend = ()=>{
+    recognition.onend = () => {
 
         micButton.classList.remove("listening");
 
@@ -207,7 +221,7 @@ function startVoiceInput(){
     };
 }
 
-function showStatus(message, className){
+function showStatus(message, className) {
 
     const status = document.getElementById("status-indicator");
 
@@ -215,7 +229,7 @@ function showStatus(message, className){
     status.className = className;
 }
 
-function clearStatus(){
+function clearStatus() {
 
     const status = document.getElementById("status-indicator");
 
